@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy Test</title>
+    <script>
+        async function testProxy() {
+            try {
+                const response = await fetch('http://localhost:8080/proxy/?api-key=7cd2ddae-9f2e-481c-99d0-404e7bc7a0b2&service=WCS&version=2.0.1&request=GetCoverage&CoverageID=korkeusmalli_2m&SUBSET=E(354468,354472)&SUBSET=N(6650556,6650560)&format=text/plain', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const text = await response.text();
+                console.log("Raw response:", text);
+
+                // Display the raw response text
+                document.getElementById('result').innerText = text;
+
+                // Extract the last two lines from the response text
+                const lines = text.trim().split('\n');
+                const lastTwoLines = lines.slice(-2).join('\n');
+
+                // Display the extracted lines
+                document.getElementById('result').innerText += `\n\nExtracted Data:\n${lastTwoLines}`;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('result').innerText = 'Error: ' + error.message;
+            }
+        }
+        window.onload = testProxy;
+    </script>
+</head>
+<body>
+    <h1>Proxy Test</h1>
+    <pre id="result">Loading...</pre>
+</body>
+</html>
